@@ -12,18 +12,27 @@ import ProductDetail from './Product/ProductDetail';
 import Cart from './Cart/Cart';
 import Api from '../api';
 
+import productStore from '../stores/ProductsStore'
+
+
+import { observer } from 'mobx-react';
 
 function NotFound() {
     return <h2>Path does not exist..</h2>
 }
 
-class AppProducts extends Component {
+@observer class AppProducts extends Component {
     state = {
         products: [],
         //itemsInCart: JSON.parse(localStorage.getItem('itemsInCart')) || [],
         itemsInCart: []
     };
 
+
+    constructor(){
+        console.log('CONSTRUCTOR');
+        console.log(productsStore);
+    }
 
     componentDidMount() {
         Api.getProducts()

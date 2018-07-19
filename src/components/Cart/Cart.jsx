@@ -1,31 +1,18 @@
 import React, { Component } from 'react';
 import CartItem from './Cartitem';
+import { observer , inject } from 'mobx-react';
 
+
+@inject('productsStore')
+@observer
 class Cart extends Component {
 
-    state={
-        items:this.props.itemsInCart
-    }
-
     handleQuantity=(item,e)=>{
-        item.quantity=e.target.value;
-        this.forceUpdate();
+        item.quantity=e.target.value;       
     }
-
-    getSubTotal(item){
-        return item.price * item.quantity;
-    }
-    
-    getTotal(){
-        let total=0;
-        this.state.items.forEach(item=>{
-            total+=this.getSubTotal(item);
-        });
-        return total;
-    }
-
 
     render() {
+        const {productsStore}=this.props;
         return (
             <div className="col-lg-8">
                 <table className="table table-striped">
@@ -40,14 +27,14 @@ class Cart extends Component {
                     <tfoot>
                         <tr >
                             <td colSpan={3}>Total</td>
-                            <td>{this.getTotal()}</td>
+                            <td>{productsStore.totalCart}</td>
                         </tr>
                     </tfoot>
                     <tbody>
-                        {this.state.items.map(
+                        {productsStore.itemsInCart.map(
                             item => <CartItem key={item.id} {...item} 
                             onUpdateQuantity={this.handleQuantity.bind(this,item)}
-                            subtotal={this.getSubTotal(item)}
+                            subtotal={productsStore.getSubTotal(item)}
                             />                        
                         )}
                     </tbody>

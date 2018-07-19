@@ -1,31 +1,27 @@
 import React, { Component } from 'react';
 import CounterCart from '../CounterCart';
 import { Link } from 'react-router-dom';
-import Api from '../../api';
+import { inject } from 'mobx-react';
 
+@inject('productsStore')
 class ProductDetail extends Component {
-    state = {
-        productInfo: {}
-    }
+    constructor(props){
+        super(props);
+        console.log('DETAIL:',props);
 
-    componentDidMount() {
-        Api.getProduct(this.props.id).then(r => {
-            this.setState(() => {
-                return {
-                    productInfo: r.data
-                }
-            })
-        })
+        this.productInfo=props.productsStore.products.find(item=>item.id===props.match.params.id);
+        this.productsStore=props.productsStore;
+        console.log('connsss:',this.productInfo);
     }
     render() {
-
-        const { name, detail, price, stock, image } = this.state.productInfo;
+        console.log('render, productInfo:',this.productInfo);
+        const { name, detail, price, stock, image } = this.productInfo;
         return (
 
             <div className="col-lg-8">
                 <nav className="navbar sticky-top navbar-light bg-light">
                     <a className="navbar-brand" href="#">Products</a>
-                    <CounterCart itemsInCart={this.props.itemsInCart} />
+                    <CounterCart itemsInCart={this.productsStore.itemsInCart} />
                 </nav>
                 <div className="card">
                     <img className="card-img-top" src={image} />

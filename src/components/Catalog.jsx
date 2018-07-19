@@ -3,27 +3,30 @@ import ProductBox from './Product/ProductBox';
 import CounterCart from './CounterCart';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { observer , inject } from 'mobx-react';
 
+
+@inject('productsStore')
+@observer
 class Catalog extends Component {
 
   onAddToCart(product, event) {
     event.preventDefault();
 
-    let itemFound = this.props.itemsInCart.find(item => (item.id === product.id));
+    let itemFound = this.props.productsStore.itemsInCart.find(item => (item.id === product.id));
     
     if (itemFound) {
       const confirmation = window.confirm('This item is already added in the cart, Quantity:' + itemFound.quantity + ', Do you want to add once more?');
-
       if (confirmation) {
-        this.props.onAddToCart(product, true);
+        this.props.productsStore.addToCart(product);
       }
     } else {
-      this.props.onAddToCart(product);
+      this.props.productsStore.addToCart(product);
     }
   }
 
   render() {
-    const { products, itemsInCart } = this.props;
+    const { products, itemsInCart } = this.props.productsStore;
     return (
       <div className="container">
         <nav className="navbar sticky-top navbar-light bg-light">
